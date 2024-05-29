@@ -1,0 +1,27 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  only:
+    - main
+
+test:
+  stage: test
+  script:
+    - echo "Run your tests here"
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  script:
+    - docker run -d -p 5000:5000 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  only:
+    - main
+
